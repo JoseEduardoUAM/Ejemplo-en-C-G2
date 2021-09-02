@@ -1,82 +1,78 @@
 #include<iostream>
 #include<time.h>
 
-void limpiarLets( int lets [] ){
+#define tiempoLet 0.2
+#define tiempoCiclo 5.0
+// Estructura para lets
+struct let{
+    int numero;
+    bool estado; 
+};
+// Arreglo que almacena e inicializa los lets
+let lets[4] = { { 35 , false } , { 36 , false } , { 37 , false } , { 38 , false } };
+// Funcion que permite esperar un determinado tiempo para encender los lets
+void esperar(){
+    clock_t ciclo = clock();
+    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < tiempoLet );
+}
+// Funcion que permite encender los lets
+void encenderLets(){
+    for( let x : lets ){
+        std::cout << x.numero << ":" << x.estado << " ";
+    }
+    std::cout << "\n";
+}
+// Funcion que permite colocar a los lets en el estado apagado = false
+void limpiarLets(){
     for (int i = 0; i < 4; i++){
-        lets[i] = 0;
+        lets[i].estado = false;
     }
 }
-
-void descendenteExclusiva( int lets [] ){
-    clock_t inicio = clock();
+// Funcion que enciende cada led de forma descendete (de mayor a menor)
+void descendenteExclusiva(){
     clock_t ciclo = clock();
-    int posicion = 0;
-    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < 5.2 ){
-        double verificar = ( (double)clock() - inicio ) / CLOCKS_PER_SEC;
-        if( verificar >= 0.2 & verificar <= 0.215 ){ 
-            std::cout << lets[0] << " " << lets[1] << " " << lets[2] << " " << lets[3] << "\n";
-            int letAnterior = posicion - 1;
-            lets[ letAnterior >= 0 ? letAnterior : 0 ] = letAnterior >= 0 ? 0 : lets[0];
-            lets[ posicion < 4 ? posicion : 0 ] = posicion < 4 ? 1 : lets[0];
-            posicion = posicion < 4 ? posicion + 1 : 0;
-            inicio = clock();
+    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < tiempoCiclo ){
+        for( int i = 0 ; i < 4 ; i++ ){
+            lets[i].estado = true;
+            encenderLets();
+            esperar();
+            lets[i].estado = false;
         }
     }
 }
-
-void ascendenteExclusiva( int lets [] ){
-    clock_t inicio = clock();
+// Funcion que enciende cada led de forma descendete (de mayor a menor)
+void ascendenteExclusiva(){
     clock_t ciclo = clock();
-    int posicion = 3;
-    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < 5.2 ){
-        double verificar = ( (double)clock() - inicio ) / CLOCKS_PER_SEC;
-        if( verificar >= 0.2 & verificar <= 0.215 ){ 
-            std::cout << lets[0] << " " << lets[1] << " " << lets[2] << " " << lets[3] << "\n";
-            int letAnterior = posicion + 1;
-            lets[ letAnterior <= 3 ? letAnterior : 3 ] = letAnterior >= 3 ? 0 : lets[3];
-            lets[ posicion >= 0 ? posicion : 0 ] = posicion >= 0 ? 1 : lets[0];
-            posicion = posicion >= 0 ? posicion - 1 : 3;
-            inicio = clock();
+    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < tiempoCiclo ){
+        for( int i = 3 ; i >= 0 ; i-- ){
+            lets[i].estado = true;
+            encenderLets();
+            esperar();
+            lets[i].estado = false;
         }
     }
 }
-
-void descendenteAditivaExclusiva( int lets [] ){
-    clock_t inicio = clock();
+// Funcion que enciende cada led de forma descendente Aditiva exclusiva
+void descendenteAditivaExclusiva(){
     clock_t ciclo = clock();
-    int posicion = 0;
-    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < 5.2 ){
-        double verificar = ( (double)clock() - inicio ) / CLOCKS_PER_SEC;
-        if( verificar >= 0.2 & verificar <= 0.215 ){ 
-            std::cout << lets[0] << " " << lets[1] << " " << lets[2] << " " << lets[3] << "\n";
-            if( posicion < 4 ){
-                lets[posicion] = 1;
-                posicion++;
-            }else{
-                limpiarLets(lets);
-                posicion = 0;
-            }
-            inicio = clock();
+    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < tiempoCiclo ){
+        for( int i = 0 ; i < 4 ; i++ ){
+            lets[i].estado = true;
+            encenderLets();
+            esperar();            
         }
+        limpiarLets();
     }
 }
-
-void ascendeteAditivaExclusiva( int lets [] ){
-    clock_t inicio = clock();
+// Funcion que enciende cada led de forma ascendente Aditiva exclusiva
+void ascendenteAditivaExclusiva(){
     clock_t ciclo = clock();
-    int posicion = 3;
-    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < 5.2 ){
-        double verificar = ( (double)clock() - inicio ) / CLOCKS_PER_SEC;
-        if( verificar >= 0.2 & verificar <= 0.215 ){ 
-            std::cout << lets[0] << " " << lets[1] << " " << lets[2] << " " << lets[3] << "\n";
-            if( posicion >= 0 ){
-                lets[posicion] = 1;
-                posicion--;
-            }else{
-                limpiarLets(lets);
-                posicion = 3;
-            }
-            inicio = clock();
+    while( ( (double)clock() - ciclo ) / CLOCKS_PER_SEC < tiempoCiclo ){
+        for( int i = 3 ; i >= 0 ; i-- ){
+            lets[i].estado = true;
+            encenderLets();
+            esperar();            
         }
+        limpiarLets();
     }
 }
